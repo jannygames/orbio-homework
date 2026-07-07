@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply bg-softgray font-sans text-ink antialiased;
+}
+
+.scroll-slim {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(1, 6, 5, 0.15) transparent;
+}
+.scroll-slim::-webkit-scrollbar {
+  width: 8px;
+}
+.scroll-slim::-webkit-scrollbar-thumb {
+  background-color: rgba(1, 6, 5, 0.15);
+  border-radius: 9999px;
+}

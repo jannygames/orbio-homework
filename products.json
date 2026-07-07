@@ -1,0 +1,324 @@
+{
+  "products": [
+    {
+      "id": "prod-001",
+      "name": "AeroPress Go Coffee Maker",
+      "brand": "AeroPress",
+      "category": "kitchen",
+      "price": 39.99,
+      "discount_percent": 0,
+      "in_stock": true,
+      "rating": 4.8,
+      "description": "Portable coffee press that brews smooth, rich coffee in about a minute. Includes a travel mug that doubles as a carrying case.",
+      "specs": {
+        "weight_g": 326,
+        "material": "BPA-free plastic",
+        "capacity_ml": 237
+      }
+    },
+    {
+      "id": "prod-002",
+      "name": "Sage Barista Express Espresso Machine",
+      "brand": "Sage",
+      "category": "kitchen",
+      "price": 549.0,
+      "discount_percent": 10,
+      "in_stock": true,
+      "rating": 4.6,
+      "description": "Bean-to-cup espresso machine with a built-in conical burr grinder, manual steam wand and precise espresso extraction.",
+      "specs": {
+        "weight_g": 10500,
+        "power_w": 1850,
+        "water_tank_ml": 2000
+      }
+    },
+    {
+      "id": "prod-003",
+      "name": "Anker PowerCore 20000 Power Bank",
+      "brand": "Anker",
+      "category": "electronics",
+      "price": 45.5,
+      "discount_percent": 15,
+      "in_stock": true,
+      "rating": 4.7,
+      "description": "High-capacity 20,000 mAh power bank with fast USB-C charging, enough to charge a phone roughly four times.",
+      "specs": {
+        "capacity_mah": 20000,
+        "weight_g": 343,
+        "ports": "1x USB-C, 2x USB-A"
+      }
+    },
+    {
+      "id": "prod-004",
+      "name": "Sony WH-1000XM5 Headphones",
+      "brand": "Sony",
+      "category": "electronics",
+      "price": 329.0,
+      "discount_percent": 0,
+      "in_stock": false,
+      "rating": 4.9,
+      "description": "Industry-leading noise-cancelling over-ear headphones with 30-hour battery life and multipoint Bluetooth connection.",
+      "specs": {
+        "battery_hours": 30,
+        "weight_g": 250,
+        "bluetooth_version": "5.2"
+      }
+    },
+    {
+      "id": "prod-005",
+      "name": "Logitech MX Master 3S Mouse",
+      "brand": "Logitech",
+      "category": "electronics",
+      "price": 99.99,
+      "discount_percent": 20,
+      "in_stock": true,
+      "rating": 4.8,
+      "description": "Ergonomic wireless mouse with a quiet click, 8K DPI sensor and an electromagnetic scroll wheel. Connects to up to three devices.",
+      "specs": {
+        "dpi": 8000,
+        "battery_days": 70,
+        "weight_g": 141
+      }
+    },
+    {
+      "id": "prod-006",
+      "name": "Kindle Paperwhite (16 GB)",
+      "brand": "Amazon",
+      "category": "electronics",
+      "price": 159.99,
+      "discount_percent": 0,
+      "in_stock": true,
+      "rating": 4.7,
+      "description": "Waterproof e-reader with a 6.8-inch glare-free display, adjustable warm light and weeks of battery life.",
+      "specs": {
+        "screen_inches": 6.8,
+        "storage_gb": 16,
+        "weight_g": 205
+      }
+    },
+    {
+      "id": "prod-007",
+      "name": "Fellow Stagg EKG Electric Kettle",
+      "brand": "Fellow",
+      "category": "kitchen",
+      "price": 165.0,
+      "discount_percent": 5,
+      "in_stock": true,
+      "rating": 4.6,
+      "description": "Precision gooseneck electric kettle with variable temperature control and a 60-minute hold mode, ideal for pour-over coffee.",
+      "specs": {
+        "capacity_ml": 900,
+        "power_w": 1200,
+        "temp_range_c": "57-100"
+      }
+    },
+    {
+      "id": "prod-008",
+      "name": "Theragun Mini Massage Gun",
+      "brand": "Therabody",
+      "category": "fitness",
+      "price": 199.0,
+      "discount_percent": 25,
+      "in_stock": true,
+      "rating": 4.5,
+      "description": "Compact percussive therapy device with three speed settings and 150 minutes of battery life. Fits in a gym bag.",
+      "specs": {
+        "speeds": 3,
+        "battery_minutes": 150,
+        "weight_g": 650
+      }
+    },
+    {
+      "id": "prod-009",
+      "name": "Garmin Forerunner 265 Watch",
+      "brand": "Garmin",
+      "category": "fitness",
+      "price": 499.99,
+      "discount_percent": 0,
+      "in_stock": true,
+      "rating": 4.8,
+      "description": "GPS running smartwatch with an AMOLED display, training readiness score and up to 13 days of battery life.",
+      "specs": {
+        "battery_days": 13,
+        "display": "AMOLED",
+        "water_resistance": "5 ATM"
+      }
+    },
+    {
+      "id": "prod-010",
+      "name": "Manduka PRO Yoga Mat",
+      "brand": "Manduka",
+      "category": "fitness",
+      "price": 89.0,
+      "discount_percent": 0,
+      "in_stock": true,
+      "rating": 4.7,
+      "description": "Dense 6 mm professional yoga mat with a lifetime guarantee, known for its durability and joint support.",
+      "specs": {
+        "thickness_mm": 6,
+        "length_cm": 180,
+        "weight_g": 3400
+      }
+    },
+    {
+      "id": "prod-011",
+      "name": "Philips Hue Starter Kit (3 bulbs)",
+      "brand": "Philips",
+      "category": "home",
+      "price": 129.99,
+      "discount_percent": 30,
+      "in_stock": true,
+      "rating": 4.6,
+      "description": "Smart lighting starter kit with three colour-changing bulbs and a bridge. Works with voice assistants and schedules.",
+      "specs": {
+        "bulbs": 3,
+        "lumens_per_bulb": 1100,
+        "socket": "E27"
+      }
+    },
+    {
+      "id": "prod-012",
+      "name": "Dyson V12 Detect Slim Vacuum",
+      "brand": "Dyson",
+      "category": "home",
+      "price": 599.0,
+      "discount_percent": 0,
+      "in_stock": false,
+      "rating": 4.5,
+      "description": "Lightweight cordless vacuum with a laser that reveals microscopic dust and up to 60 minutes of runtime.",
+      "specs": {
+        "runtime_minutes": 60,
+        "weight_g": 2200,
+        "bin_ml": 350
+      }
+    },
+    {
+      "id": "prod-013",
+      "name": "Moleskine Classic Notebook (Large)",
+      "brand": "Moleskine",
+      "category": "office",
+      "price": 19.9,
+      "discount_percent": 0,
+      "in_stock": true,
+      "rating": 4.4,
+      "description": "Iconic hardcover ruled notebook with an elastic closure, ribbon bookmark and expandable inner pocket.",
+      "specs": {
+        "pages": 240,
+        "size_cm": "13x21",
+        "paper_gsm": 70
+      }
+    },
+    {
+      "id": "prod-014",
+      "name": "Herman Miller Sayl Office Chair",
+      "brand": "Herman Miller",
+      "category": "office",
+      "price": 780.0,
+      "discount_percent": 12,
+      "in_stock": true,
+      "rating": 4.6,
+      "description": "Ergonomic office chair with a distinctive suspension back, adjustable seat depth and fully adjustable arms.",
+      "specs": {
+        "max_load_kg": 159,
+        "weight_g": 17700,
+        "adjustable_arms": true
+      }
+    },
+    {
+      "id": "prod-015",
+      "name": "BenQ ScreenBar Halo Monitor Light",
+      "brand": "BenQ",
+      "category": "office",
+      "price": 119.0,
+      "discount_percent": 0,
+      "in_stock": true,
+      "rating": 4.7,
+      "description": "Monitor-mounted light bar with a wireless controller, auto-dimming and an asymmetric optical design that avoids screen glare.",
+      "specs": {
+        "max_lux": 800,
+        "color_temp_k": "2700-6500",
+        "power": "USB"
+      }
+    },
+    {
+      "id": "prod-016",
+      "name": "JBL Flip 6 Bluetooth Speaker",
+      "brand": "JBL",
+      "category": "electronics",
+      "price": 109.99,
+      "discount_percent": 10,
+      "in_stock": true,
+      "rating": 4.6,
+      "description": "Portable waterproof Bluetooth speaker with punchy bass and 12 hours of playtime. Pairs with a second speaker for stereo sound.",
+      "specs": {
+        "battery_hours": 12,
+        "weight_g": 550,
+        "waterproof": "IP67"
+      }
+    },
+    {
+      "id": "prod-017",
+      "name": "Ninja Dual Zone Air Fryer",
+      "brand": "Ninja",
+      "category": "kitchen",
+      "price": 179.0,
+      "discount_percent": 15,
+      "in_stock": true,
+      "rating": 4.8,
+      "description": "Air fryer with two independent cooking zones, letting you cook two different foods at once and finish them at the same time.",
+      "specs": {
+        "capacity_l": 7.6,
+        "power_w": 2470,
+        "programs": 6
+      }
+    },
+    {
+      "id": "prod-018",
+      "name": "Hydro Flask Wide Mouth Bottle (946 ml)",
+      "brand": "Hydro Flask",
+      "category": "fitness",
+      "price": 44.95,
+      "discount_percent": 0,
+      "in_stock": true,
+      "rating": 4.7,
+      "description": "Insulated stainless steel water bottle that keeps drinks cold for 24 hours or hot for 12. Dishwasher safe.",
+      "specs": {
+        "capacity_ml": 946,
+        "weight_g": 430,
+        "insulation": "double-wall vacuum"
+      }
+    },
+    {
+      "id": "prod-019",
+      "name": "TP-Link Tapo Smart Plug (4-pack)",
+      "brand": "TP-Link",
+      "category": "home",
+      "price": 34.99,
+      "discount_percent": 20,
+      "in_stock": true,
+      "rating": 4.5,
+      "description": "Wi-Fi smart plugs with energy monitoring, schedules and voice assistant support. No hub required.",
+      "specs": {
+        "max_load_w": 3680,
+        "wifi": "2.4 GHz",
+        "count": 4
+      }
+    },
+    {
+      "id": "prod-020",
+      "name": "Ember Mug 2 Temperature Control Mug",
+      "brand": "Ember",
+      "category": "kitchen",
+      "price": 129.95,
+      "discount_percent": 0,
+      "in_stock": false,
+      "rating": 4.3,
+      "description": "App-controlled smart mug that keeps your coffee or tea at your exact preferred temperature for up to 80 minutes.",
+      "specs": {
+        "capacity_ml": 295,
+        "battery_minutes": 80,
+        "temp_range_c": "50-62.5"
+      }
+    }
+  ]
+}
