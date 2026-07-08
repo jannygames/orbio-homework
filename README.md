@@ -19,7 +19,8 @@ docker compose up --build
 - Raw OpenAPI schema: http://localhost:8000/openapi.json
 
 That's it — `docker compose up` starts the database, backend and frontend together.
-Tables are created automatically on backend startup.
+The backend container runs `alembic upgrade head` before starting the server, so the
+schema is always up to date.
 
 ## Architecture
 
@@ -28,9 +29,14 @@ orbio-homework/
   products.json          # static product catalog, read by the product tools
   docker-compose.yml
   backend/                # FastAPI app
+    alembic.ini           # Alembic config (points at migrations/)
+    migrations/           # Alembic environment + versioned schema migrations
     app/
-      main.py             # app factory, lifespan (DB table creation, LLM client init), CORS, error handlers
-      core/config.py      # Pydantic Settings (env-driven config)
+      main.py             # app factory, middleware, CORS, error handlers
+      core/
+        config.py         # Pydantic Settings (env-driven config)
+        logging.py        # structured/text logging setup, request-ID log filter
+        middleware.py      # RequestIdMiddleware (generates/propagates X-Request-ID)
       db/                 # SQLAlchemy async engine/session + ORM models
       schemas/            # Pydantic request/response models
       repositories/       # data-access layer (Conversation/Message)
@@ -55,7 +61,7 @@ orbio-homework/
 
 ### Data model
 
-Two tables, both created automatically on startup:
+Two tables, managed via Alembic migrations (`backend/migrations/versions/`):
 
 - **`conversations`** — just an id + timestamp. The "current" conversation is always
   the most recently created row; a **reset** simply inserts a new one. Older messages
@@ -131,9 +137,12 @@ own knowledge.
   (DB access) → ORM models. Each layer is independently testable and the HTTP layer
   knows nothing about SQLAlchemy or Gemini specifics.
 - **Dependency injection** (FastAPI `Depends`) for the DB session and the LLM client.
-  The LLM client is injected via an `LLMClient` protocol, which is what lets the test
-  suite swap in a scripted `FakeGeminiClient` and exercise the full tool-calling loop
-  deterministically, with no network calls or API key required.
+  Both are built lazily inside `app/api/deps.py` (the Gemini client via a small
+  `@lru_cache`-backed factory) rather than attached to `app.state` in a lifespan hook,
+  so construction lives entirely behind the dependency graph. The LLM client is
+  injected via an `LLMClient` protocol, which is what lets the test suite swap in a
+  scripted `FakeGeminiClient` via `dependency_overrides` and exercise the full
+  tool-calling loop deterministically, with no network calls or API key required.
 - **Repository pattern** for conversations/messages, isolating SQLAlchemy from the
   rest of the app.
 - **Centralized error handling** — a small `AppError` hierarchy plus exception
@@ -141,12 +150,17 @@ own knowledge.
   (empty message, overly long message, LLM failure, etc.) returns a clean JSON error
   body with an appropriate status code instead of a bare 500.
 - **Pydantic Settings** for 12-factor configuration (`DATABASE_URL`, `GEMINI_API_KEY`,
-  `GEMINI_MODEL`, CORS origins, message length limits).
+  `GEMINI_MODEL`, CORS origins, message length limits, environment/log level).
 - **Swagger/OpenAPI docs** come for free from FastAPI; routes are annotated with
   summaries, descriptions and response models for a clean `/docs` page.
-- **`Base.metadata.create_all` on startup** instead of Alembic migrations — the
-  intentionally simplest option for a project this size. A production system would
-  add Alembic migrations as the next step.
+- **Alembic migrations** (`backend/migrations/`) instead of `Base.metadata.create_all`
+  — schema changes are explicit, reviewable, versioned files, applied via
+  `alembic upgrade head` (run automatically by the backend container on startup).
+- **Structured logging with request correlation** — `RequestIdMiddleware` stamps every
+  request with an `X-Request-ID` (reusing an inbound one if present) and stores it in a
+  contextvar; every log line emitted while handling that request includes it. Logs are
+  human-readable text in development and single-line JSON in production
+  (`ENVIRONMENT=production`), suited for log aggregators.
 
 ## Running tests
 
@@ -179,10 +193,15 @@ All configuration is via environment variables (see [`.env.example`](.env.exampl
 | `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` | `postgres` / `postgres` / `product_assistant` | Postgres credentials, shared by the `db` and `backend` services |
 | `GEMINI_API_KEY` | _(empty)_ | Your Gemini API key from [Google AI Studio](https://aistudio.google.com/apikey) |
 | `GEMINI_MODEL` | `gemini-3.5-flash` | Gemini model used for chat + tool calling |
+| `ENVIRONMENT` | `development` | `production` switches logging to structured JSON |
+| `LOG_LEVEL` | `INFO` | Root logger level |
+
+Migrations: from `backend/`, run `alembic upgrade head` to apply, or
+`alembic revision --autogenerate -m "message"` to generate a new migration after
+changing the SQLAlchemy models.
 
 ## Notes / possible next steps
 
-- Alembic migrations instead of `create_all` for schema evolution.
 - Per-user/session conversations (currently there is a single global "current"
   conversation, matching the scope of the task).
 - Rate limiting and retries around the Gemini API call.
