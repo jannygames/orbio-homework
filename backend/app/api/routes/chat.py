@@ -8,6 +8,7 @@ from app.api.deps import get_conversation_repository, get_llm_client
 from app.repositories.conversation_repository import ConversationRepository
 from app.schemas.chat import ChatRequest, ErrorResponse, HistoryResponse, MessageOut, ResetResponse
 from app.services.llm.client import LLMClient
+from app.services.llm.events import EventType
 from app.services.llm.orchestrator import run_chat_turn
 
 logger = logging.getLogger(__name__)
@@ -15,8 +16,8 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/chat", tags=["chat"])
 
 
-def _format_sse(event: str, data: dict) -> str:
-    return f"event: {event}\ndata: {json.dumps(data)}\n\n"
+def _format_sse(event: EventType, data: dict) -> str:
+    return f"event: {event.value}\ndata: {json.dumps(data)}\n\n"
 
 
 @router.post(
@@ -44,7 +45,7 @@ async def chat(
         except Exception:
             logger.exception("Chat turn failed for conversation %s", conversation.id)
             yield _format_sse(
-                "error", {"message": "The assistant failed to respond. Please try again."}
+                EventType.ERROR, {"message": "The assistant failed to respond. Please try again."}
             )
 
     return StreamingResponse(
