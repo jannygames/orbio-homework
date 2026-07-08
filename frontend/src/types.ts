@@ -1,7 +1,17 @@
 export type MessageRole = 'user' | 'assistant' | 'tool_call' | 'tool_result'
 
+export const StreamEventType = {
+  Token: 'token',
+  ToolCall: 'tool_call',
+  ToolResult: 'tool_result',
+  Done: 'done',
+  Error: 'error',
+} as const
+
+export type StreamEventName = (typeof StreamEventType)[keyof typeof StreamEventType]
+
 export interface ChatMessage {
-  id: number
+  id: number | string
   role: MessageRole
   content: string
   tool_name: string | null

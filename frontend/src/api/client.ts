@@ -1,4 +1,4 @@
-import type { HistoryResponse, ResetResponse } from '../types'
+import { StreamEventType, type HistoryResponse, type ResetResponse, type StreamEventName } from '../types'
 
 const API_BASE = '/api'
 
@@ -26,8 +26,6 @@ export async function resetConversation(): Promise<ResetResponse> {
   }
   return response.json()
 }
-
-export type StreamEventName = 'token' | 'tool_call' | 'tool_result' | 'done' | 'error'
 
 export interface StreamEvent {
   event: StreamEventName
@@ -65,7 +63,7 @@ export async function streamChat(
       buffer = buffer.slice(boundary + 2)
       boundary = buffer.indexOf('\n\n')
 
-      let eventName: StreamEventName = 'token'
+      let eventName: StreamEventName = StreamEventType.Token
       let dataRaw = ''
       for (const line of rawEvent.split('\n')) {
         if (line.startsWith('event:')) {
