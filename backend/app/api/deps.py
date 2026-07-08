@@ -1,11 +1,13 @@
+from functools import lru_cache
 from typing import AsyncIterator
 
-from fastapi import Depends, Request
+from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.config import get_settings
 from app.db.base import AsyncSessionLocal
 from app.repositories.conversation_repository import ConversationRepository
-from app.services.llm.client import LLMClient
+from app.services.llm.client import GeminiLLMClient, LLMClient
 
 
 async def get_db() -> AsyncIterator[AsyncSession]:
@@ -19,5 +21,11 @@ def get_conversation_repository(
     return ConversationRepository(session)
 
 
-def get_llm_client(request: Request) -> LLMClient:
-    return request.app.state.llm_client
+@lru_cache
+def _build_gemini_client() -> GeminiLLMClient:
+    settings = get_settings()
+    return GeminiLLMClient(api_key=settings.gemini_api_key, model=settings.gemini_model)
+
+
+def get_llm_client() -> LLMClient:
+    return _build_gemini_client()

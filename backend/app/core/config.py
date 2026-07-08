@@ -14,6 +14,9 @@ class Settings(BaseSettings):
     max_message_length: int = 2000
     max_tool_iterations: int = 5
 
+    environment: str = "development"
+    log_level: str = "INFO"
+
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
 

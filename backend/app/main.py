@@ -1,31 +1,13 @@
-import logging
-from contextlib import asynccontextmanager
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routes import chat, health
 from app.core.config import get_settings
-from app.db.base import Base, engine
+from app.core.logging import configure_logging
+from app.core.middleware import RequestIdMiddleware
 from app.exceptions import register_exception_handlers
-from app.services.llm.client import GeminiLLMClient
 
-logging.basicConfig(level=logging.INFO)
-
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    settings = get_settings()
-
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-
-    app.state.llm_client = GeminiLLMClient(
-        api_key=settings.gemini_api_key,
-        model=settings.gemini_model,
-    )
-
-    yield
+configure_logging()
 
 
 def create_app() -> FastAPI:
@@ -38,7 +20,6 @@ def create_app() -> FastAPI:
             "knows how to use tools (tool calling) to look them up in the catalog."
         ),
         version="1.0.0",
-        lifespan=lifespan,
     )
 
     app.add_middleware(
@@ -48,6 +29,7 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+    app.add_middleware(RequestIdMiddleware)
 
     register_exception_handlers(app)
 
