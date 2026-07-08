@@ -8,7 +8,8 @@ from sqlalchemy.pool import StaticPool
 from app.api import deps
 from app.db.base import Base
 from app.main import create_app
-from app.services.llm_service import LLMClient, StreamChunk
+from app.services.llm.client import LLMClient
+from app.services.llm.stream import StreamChunk
 
 
 class FakeGeminiClient:

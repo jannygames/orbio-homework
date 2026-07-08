@@ -2,7 +2,7 @@ import json
 
 from tests.conftest import FakeGeminiClient, set_llm_client
 
-from app.services.llm_service import StreamChunk, ToolCall
+from app.services.llm.stream import StreamChunk, ToolCall
 
 
 def _parse_sse(body: str) -> list[dict]:

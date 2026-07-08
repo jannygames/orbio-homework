@@ -7,7 +7,8 @@ from fastapi.responses import StreamingResponse
 from app.api.deps import get_conversation_repository, get_llm_client
 from app.repositories.conversation_repository import ConversationRepository
 from app.schemas.chat import ChatRequest, ErrorResponse, HistoryResponse, MessageOut, ResetResponse
-from app.services.llm_service import LLMClient, run_chat_turn
+from app.services.llm.client import LLMClient
+from app.services.llm.orchestrator import run_chat_turn
 
 logger = logging.getLogger(__name__)
 

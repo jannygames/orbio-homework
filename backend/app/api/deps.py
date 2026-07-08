@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.base import AsyncSessionLocal
 from app.repositories.conversation_repository import ConversationRepository
-from app.services.llm_service import LLMClient
+from app.services.llm.client import LLMClient
 
 
 async def get_db() -> AsyncIterator[AsyncSession]:

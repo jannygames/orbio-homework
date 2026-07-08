@@ -36,7 +36,12 @@ orbio-homework/
       repositories/       # data-access layer (Conversation/Message)
       services/
         product_tools.py  # tool registry + implementations (search, details, compare, categories, recommend)
-        llm_service.py    # Gemini turn loop: history -> LLM -> tool calls -> persistence -> stream
+        llm/
+          client.py       # LLMClient protocol + Gemini implementation (streaming API calls)
+          prompts.py      # system instruction given to the model
+          stream.py       # StreamChunk/ToolCall data structures shared by client + orchestrator
+          events.py       # ChatEvent/EventType SSE event definitions
+          orchestrator.py # turn loop: history -> LLM -> tool calls -> persistence -> stream
       api/
         deps.py           # DB session / LLM client dependency injection
         routes/            # chat + health endpoints

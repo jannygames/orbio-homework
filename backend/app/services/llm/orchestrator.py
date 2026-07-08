@@ -1,114 +1,25 @@
+"""Orchestrates a chat turn: builds model contents, streams the LLM response,
+persists conversation state, and drives tool-call execution."""
+
 from __future__ import annotations
 
 import json
 import logging
-from dataclasses import dataclass, field
-from typing import Any, AsyncIterator, Protocol
+from typing import AsyncIterator
 from uuid import uuid4
 
-from google import genai
 from google.genai import types
 
 from app.core.config import get_settings
 from app.db.models import Message
 from app.repositories.conversation_repository import ConversationRepository
-from app.services.product_tools import execute_tool, get_tools
+from app.services.llm.client import LLMClient
+from app.services.llm.events import ChatEvent, EventType
+from app.services.llm.prompts import SYSTEM_INSTRUCTION
+from app.services.llm.stream import ToolCall
+from app.services.product_tools import execute_tool
 
 logger = logging.getLogger(__name__)
-
-SYSTEM_INSTRUCTION = (
-    "You are a friendly shopping assistant for an online store. "
-    "Answer questions about the store's products ONLY using the provided tools - "
-    "never invent product names, prices, stock status, ratings or specs. "
-    "Available tools: get_products (search/filter), get_product_details (one product), "
-    "list_categories (catalog overview), compare_products (side-by-side), and "
-    "recommend_products (best-rated within a budget/category). "
-    "Pick the most specific tool for the question and call it before answering. "
-    "If a question is unrelated to the product catalog, politely say you can only help "
-    "with questions about the store's products. Keep answers concise and friendly, cite "
-    "concrete numbers (price in EUR, stock, rating) from the tool results, and format "
-    "lists of products with short bullet points."
-)
-
-
-class EventType:
-    """SSE event names emitted during a chat turn."""
-
-    TOKEN = "token"
-    TOOL_CALL = "tool_call"
-    TOOL_RESULT = "tool_result"
-    DONE = "done"
-    ERROR = "error"
-
-
-@dataclass
-class ChatEvent:
-    """A single streamable event produced while handling a chat turn."""
-
-    event: str
-    data: dict[str, Any]
-
-
-@dataclass
-class ToolCall:
-    name: str
-    args: dict[str, Any]
-    part: types.Part | None = None
-
-    def to_part(self) -> types.Part:
-        if self.part is not None:
-            return self.part
-        return types.Part.from_function_call(name=self.name, args=self.args)
-
-
-@dataclass
-class StreamChunk:
-    text: str | None = None
-    tool_calls: list[ToolCall] = field(default_factory=list)
-
-
-class LLMClient(Protocol):
-    def stream_turn(
-        self,
-        contents: list[types.Content],
-        system_instruction: str,
-    ) -> AsyncIterator[StreamChunk]: ...
-
-
-class GeminiLLMClient:
-    def __init__(self, api_key: str, model: str):
-        self._client = genai.Client(api_key=api_key)
-        self._model = model
-
-    async def stream_turn(
-        self,
-        contents: list[types.Content],
-        system_instruction: str,
-    ) -> AsyncIterator[StreamChunk]:
-        config = types.GenerateContentConfig(
-            tools=get_tools(),
-            system_instruction=system_instruction,
-            automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
-        )
-        stream = await self._client.aio.models.generate_content_stream(
-            model=self._model,
-            contents=contents,
-            config=config,
-        )
-        async for chunk in stream:
-            candidate = chunk.candidates[0] if chunk.candidates else None
-            parts = candidate.content.parts if candidate and candidate.content and candidate.content.parts else []
-
-            tool_calls = [
-                ToolCall(name=part.function_call.name, args=dict(part.function_call.args or {}), part=part)
-                for part in parts
-                if part.function_call
-            ]
-            text_pieces = [p.text for p in parts if p.text and not getattr(p, "thought", False)]
-            text = "".join(text_pieces) if text_pieces and not tool_calls else None
-
-            if text or tool_calls:
-                yield StreamChunk(text=text, tool_calls=tool_calls)
 
 
 def build_contents(history: list[Message]) -> list[types.Content]:

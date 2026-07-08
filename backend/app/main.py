@@ -8,7 +8,7 @@ from app.api.routes import chat, health
 from app.core.config import get_settings
 from app.db.base import Base, engine
 from app.exceptions import register_exception_handlers
-from app.services.llm_service import GeminiLLMClient
+from app.services.llm.client import GeminiLLMClient
 
 logging.basicConfig(level=logging.INFO)
 
